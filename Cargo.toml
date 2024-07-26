@@ -32,7 +32,7 @@ zero-copy = []
 
 [profile.release]
 debug = true
-panic = "abort"
+# panic = "abort"
 
 [workspace]
 members = ["binary"]

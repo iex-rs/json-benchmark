@@ -1,3 +1,5 @@
+use iex::iex;
+
 #[cfg(feature = "serde")]
 use std::fmt;
 #[cfg(any(feature = "serde", feature = "lib-rustc-serialize"))]
@@ -60,6 +62,7 @@ impl Serialize for Color {
 
 #[cfg(feature = "serde")]
 impl<'de> Deserialize<'de> for Color {
+    #[iex]
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -73,6 +76,7 @@ impl<'de> Deserialize<'de> for Color {
                 formatter.write_str("color string")
             }
 
+            #[iex]
             fn visit_str<E>(self, value: &str) -> Result<Color, E>
             where
                 E: de::Error,

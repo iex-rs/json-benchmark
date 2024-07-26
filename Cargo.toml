@@ -9,9 +9,10 @@ publish = false
 getopts = "0.2"
 jemallocator = "0.5"
 rustc-serialize = { version = "0.3", optional = true }
-serde = { version = "1.0", features = ["derive"], optional = true }
-serde_json = { version = "1.0", optional = true }
+serde = { path = "../serde/serde", version = "1.0", features = ["derive"], optional = true }
+serde_json = { path = "../json", version = "1.0", optional = true }
 simd-json = { version = "0.12", optional = true }
+iex = { path = "/home/purplesyringa/iex" }
 
 [features]
 default = ["performance", "all-libs", "all-files"]

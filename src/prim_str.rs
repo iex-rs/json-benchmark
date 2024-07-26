@@ -1,3 +1,5 @@
+use iex::iex;
+
 #[cfg(feature = "serde")]
 use std::fmt;
 use std::fmt::Display;
@@ -33,6 +35,7 @@ impl<'de, T> Deserialize<'de> for PrimStr<T>
 where
     T: Copy + Ord + Display + FromStr,
 {
+    #[iex]
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -50,6 +53,7 @@ where
                 formatter.write_str("number represented as string")
             }
 
+            #[iex]
             fn visit_str<E>(self, value: &str) -> Result<PrimStr<T>, E>
             where
                 E: de::Error,

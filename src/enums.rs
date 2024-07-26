@@ -26,6 +26,7 @@ macro_rules! enum_str {
 
         #[cfg(feature = "serde")]
         impl<'de> ::serde::Deserialize<'de> for $name {
+            #[iex::iex]
             fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
                 where D: ::serde::Deserializer<'de>,
             {
@@ -38,6 +39,7 @@ macro_rules! enum_str {
                         formatter.write_str("unit variant")
                     }
 
+                    #[iex::iex]
                     fn visit_str<E>(self, value: &str) -> Result<$name, E>
                         where E: ::serde::de::Error,
                     {

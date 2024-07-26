@@ -1,3 +1,5 @@
+use iex::iex;
+
 #[cfg(feature = "lib-rustc-serialize")]
 use rustc_serialize::{Decodable, Decoder, Encodable, Encoder};
 #[cfg(feature = "serde")]
@@ -20,6 +22,7 @@ impl Serialize for Array {
 
 #[cfg(feature = "serde")]
 impl<'de> Deserialize<'de> for Array {
+    #[iex]
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -33,6 +36,7 @@ impl<'de> Deserialize<'de> for Array {
                 formatter.write_str("empty array")
             }
 
+            #[iex]
             fn visit_seq<V>(self, _: V) -> Result<Array, V::Error>
             where
                 V: de::SeqAccess<'de>,

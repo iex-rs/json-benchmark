@@ -1,5 +1,7 @@
 #![allow(clippy::needless_borrow, clippy::wildcard_imports)]
 
+use iex::Outcome;
+
 #[global_allocator]
 static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
@@ -227,7 +229,7 @@ fn main() {
     any(feature = "parse-dom", feature = "stringify-dom")
 ))]
 fn serde_json_parse_dom(s: &str) -> serde_json::Result<serde_json::Value> {
-    serde_json::from_str(s)
+    serde_json::from_str(s).into_result()
 }
 
 #[cfg(all(
@@ -238,7 +240,7 @@ fn serde_json_parse_struct<'de, T>(s: &'de str) -> serde_json::Result<T>
 where
     T: serde::Deserialize<'de>,
 {
-    serde_json::from_str(s)
+    serde_json::from_str(s).into_result()
 }
 
 #[cfg(all(

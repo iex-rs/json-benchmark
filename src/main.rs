@@ -60,7 +60,7 @@ macro_rules! bench_file {
         let contents = {
             let mut vec = Vec::new();
             File::open($path).unwrap().read_to_end(&mut vec).unwrap();
-            vec
+            String::from_utf8(vec).unwrap()
         };
 
         #[cfg(feature = "parse-dom")]
@@ -232,9 +232,7 @@ fn main() {
     feature = "lib-serde",
     any(feature = "parse-dom", feature = "stringify-dom")
 ))]
-fn serde_json_parse_dom(bytes: &[u8]) -> serde_json::Result<serde_json::Value> {
-    use std::str;
-    let s = str::from_utf8(bytes).unwrap();
+fn serde_json_parse_dom(s: &str) -> serde_json::Result<serde_json::Value> {
     serde_json::from_str(s)
 }
 
@@ -242,12 +240,10 @@ fn serde_json_parse_dom(bytes: &[u8]) -> serde_json::Result<serde_json::Value> {
     feature = "lib-serde",
     any(feature = "parse-struct", feature = "stringify-struct")
 ))]
-fn serde_json_parse_struct<'de, T>(bytes: &'de [u8]) -> serde_json::Result<T>
+fn serde_json_parse_struct<'de, T>(s: &'de str) -> serde_json::Result<T>
 where
     T: serde::Deserialize<'de>,
 {
-    use std::str;
-    let s = str::from_utf8(bytes).unwrap();
     serde_json::from_str(s)
 }
 
@@ -256,8 +252,9 @@ where
     any(feature = "parse-dom", feature = "stringify-dom")
 ))]
 fn rustc_serialize_parse_dom(
-    mut bytes: &[u8],
+    s: &str,
 ) -> Result<rustc_serialize::json::Json, rustc_serialize::json::BuilderError> {
+    let mut bytes = s.as_bytes();
     rustc_serialize::json::Json::from_reader(&mut bytes)
 }
 
@@ -265,12 +262,10 @@ fn rustc_serialize_parse_dom(
     feature = "lib-rustc-serialize",
     any(feature = "parse-struct", feature = "stringify-struct")
 ))]
-fn rustc_serialize_parse_struct<T>(bytes: &[u8]) -> rustc_serialize::json::DecodeResult<T>
+fn rustc_serialize_parse_struct<T>(s: &str) -> rustc_serialize::json::DecodeResult<T>
 where
     T: rustc_serialize::Decodable,
 {
-    use std::str;
-    let s = str::from_utf8(bytes).unwrap();
     rustc_serialize::json::decode(s)
 }
 

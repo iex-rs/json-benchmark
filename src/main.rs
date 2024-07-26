@@ -48,7 +48,7 @@ macro_rules! bench_file {
         parse_dom: $parse_dom:expr,
         stringify_dom: $stringify_dom:expr,
         $(
-            parse_struct: $parse_struct:expr,
+            parse_struct: $parse_struct:ident,
             stringify_struct: $stringify_struct:expr,
         )*
     } => {
@@ -65,10 +65,7 @@ macro_rules! bench_file {
 
         #[cfg(feature = "parse-dom")]
         {
-            let dur = timer::bench(num_trials, || {
-                let parsed: $dom = $parse_dom(&contents).unwrap();
-                parsed
-            });
+            let dur = timer::bench(num_trials, || $parse_dom(&contents));
             print!("{:6} MB/s", throughput(dur, contents.len()));
             io::stdout().flush().unwrap();
         }
@@ -93,10 +90,7 @@ macro_rules! bench_file {
         $(
             #[cfg(feature = "parse-struct")]
             {
-                let dur = timer::bench(num_trials, || {
-                    let parsed: $structure = $parse_struct(&contents).unwrap();
-                    parsed
-                });
+                let dur = timer::bench(num_trials, || $parse_struct::<$structure>(&contents));
                 print!("{:6} MB/s", throughput(dur, contents.len()));
                 io::stdout().flush().unwrap();
             }
